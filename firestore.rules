@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner() {
+      return request.auth != null
+        && request.auth.uid == 'REPLACE_WITH_YOUR_FIREBASE_UID';
+    }
+    function validRecord() {
+      let d = request.resource.data;
+      return d.keys().hasAll(['plan', 'version', 'updatedAt'])
+        && d.keys().hasOnly(['plan', 'version', 'updatedAt'])
+        && d.plan is map
+        && d.plan.keys().hasAll(['start','target','weeklyMinutes','totals','books','papers','daily','extras'])
+        && d.plan.start is string && d.plan.target is string
+        && d.plan.weeklyMinutes is int && d.plan.weeklyMinutes > 0 && d.plan.weeklyMinutes <= 10080
+        && d.plan.totals is map && d.plan.books is map
+        && d.plan.papers is map && d.plan.daily is map && d.plan.extras is list
+        && d.version is int && d.version >= 0
+        && d.updatedAt == request.time;
+    }
+    // 家人與其他取得網址的人可以讀取這份進度，包含題本筆記。
+    // 只有你指定的 Firebase 使用者 UID 可以建立、更新。
+    match /studyPlans/main {
+      allow get: if true;
+      allow list, delete: if false;
+      allow create: if isOwner() && validRecord() && request.resource.data.version == 0;
+      allow update: if isOwner() && validRecord()
+        && request.resource.data.version == resource.data.version + 1;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
