@@ -14,3 +14,4 @@ export function weeks(p:Plan){return Math.ceil(diff(p.target,p.start)/7)}
 export function roundList(p:Plan,s:Subject,w:number){return Array.from({length:weekly[s]},(_,i)=>w*weekly[s]+i+1).filter(n=>n<=p.totals[s])}
 export function dayList(p:Plan,w:number){return Array.from({length:7},(_,i)=>addDays(p.start,w*7+i)).filter(d=>d<p.target)}
 export function weekStats(p:Plan,w:number){const dates=dayList(p,w);let completed=0,total=0;for(const s of subjects)for(const n of roundList(p,s,w)){total++;if(done(p,s,n))completed++}let dailyMinutes=0;for(const d of dates){if(p.daily['english-'+d])dailyMinutes+=30;if(p.daily['chinese-'+d])dailyMinutes+=20}const planned=total*120+dates.length*50;const extra=p.extras.filter(e=>e.week===w).reduce((a,e)=>a+e.minutes,0);return {completed,total,dailyMinutes,planned,credited:completed*120+dailyMinutes,extra,buffer:Math.round(p.weeklyMinutes*dates.length/7)-planned};}
+

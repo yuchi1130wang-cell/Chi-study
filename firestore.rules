@@ -3,7 +3,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isOwner() {
       return request.auth != null
-        && request.auth.uid == 'REPLACE_WITH_YOUR_FIREBASE_UID';
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'yuchi1130.wang@gmail.com';
     }
     function validRecord() {
       let d = request.resource.data;
@@ -19,7 +20,7 @@ service cloud.firestore {
         && d.updatedAt == request.time;
     }
     // 家人與其他取得網址的人可以讀取這份進度，包含題本筆記。
-    // 只有你指定的 Firebase 使用者 UID 可以建立、更新。
+    // 只有你指定的 已驗證 Google 電子郵件 可以建立、更新。
     match /studyPlans/main {
       allow get: if true;
       allow list, delete: if false;
@@ -30,3 +31,4 @@ service cloud.firestore {
     match /{document=**} { allow read, write: if false; }
   }
 }
+

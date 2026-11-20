@@ -9,8 +9,8 @@
   <title>奇的學測進度</title>
 
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css">
-  <script src="./firebase-config.js"></script>
+  <link rel="stylesheet" href="./style.css?v=20261121-fix1">
+  <script src="./firebase-config.js?v=20261121-fix1"></script>
 </head>
 <body>
   <div id="root">
@@ -20,6 +20,11 @@
   </div>
 
   <noscript>請啟用 JavaScript 以查看學測進度。</noscript>
-  <script type="module" src="./app.js"></script>
+  <script type="module">
+    import('./app.js?v=20261121-fix1').catch(() => {
+      document.getElementById('root').textContent = '程式載入失敗。請確認 app.js 已上傳到與 index.html 相同的位置，並確認網路能連接 www.gstatic.com。重新整理後仍失敗，請拍下瀏覽器 Console 錯誤。';
+    });
+  </script>
 </body>
 </html>
+

@@ -8,5 +8,7 @@ window.STUDY_CONFIG = {
     appId: "1:868934139284:web:3fe52652457ee911c8e381",
     measurementId: "G-00GMVQZTSY"
   },
-  adminUid: ""
+  adminEmail: "yuchi1130.wang@gmail.com",
+  release: "20261121-fix1"
 };
+
